@@ -30,7 +30,27 @@ const contract = new ethers.Contract(
 
 // Ensure this does NOT have a trailing slash in your .env
 const FIREBASE_DB = process.env.FIREBASE_DB_URL;
+// Temporary storage (In a real app, use a database like MongoDB or Firebase)
+let activeTransports = {};
 
+app.post('/local-pickup', (req, res) => {
+    const { batchId, transporter, location, time } = req.body;
+    
+    if (!batchId || !transporter) {
+        return res.status(400).json({ error: "Missing pickup data" });
+    }
+
+    // Store the pickup details locally on the server
+    activeTransports[batchId] = {
+        transporter,
+        pickupLocation: location,
+        pickupTime: time,
+        status: "In Transit"
+    };
+
+    console.log(`Driver ${transporter} picked up Batch ${batchId} at ${location}`);
+    res.json({ success: true, message: "Pickup recorded in backend" });
+});
 // This route is specifically for the consumer page to read sensor data
 app.get("/consumer-data/:batchId", async (req, res) => {
     try {
