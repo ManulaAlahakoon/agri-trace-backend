@@ -1,53 +1,92 @@
-[
-			{
-				"anonymous": false,
+[ {
 				"inputs": [
 					{
-						"indexed": true,
 						"internalType": "uint256",
-						"name": "batchId",
+						"name": "_batchId",
 						"type": "uint256"
 					},
 					{
-						"indexed": false,
 						"internalType": "string",
-						"name": "farmerName",
+						"name": "_arrLat",
 						"type": "string"
 					},
 					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					}
-				],
-				"name": "HarvestStored",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "uint256",
-						"name": "batchId",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
 						"internalType": "string",
-						"name": "hash",
+						"name": "_arrLng",
 						"type": "string"
 					},
 					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "minTemperature",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "averageTemperature",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxTemperature",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "averageHumidity",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "travelDurationSeconds",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxGForce",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "averageGForce",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "vibrationIndex",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "totalShockCount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "maxShockLatitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "maxShockLongitude",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxShockTimestamp",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct AgriSupplyChainPro.TransportSummary",
+						"name": "s",
+						"type": "tuple"
 					}
 				],
-				"name": "SensorHashStored",
-				"type": "event"
+				"name": "anchorTransportSummary",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -66,12 +105,22 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_batchId",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "getHarvestData",
+				"name": "batches",
 				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "batchId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum AgriSupplyChainPro.BatchStatus",
+						"name": "status",
+						"type": "uint8"
+					},
 					{
 						"components": [
 							{
@@ -81,7 +130,32 @@
 							},
 							{
 								"internalType": "string",
-								"name": "location",
+								"name": "farmLocationName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "harvestLatitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "harvestLongitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "cropName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "cropVariety",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "plantingDate",
 								"type": "string"
 							},
 							{
@@ -90,37 +164,548 @@
 								"type": "string"
 							},
 							{
+								"internalType": "string",
+								"name": "postHarvestImage",
+								"type": "string"
+							},
+							{
 								"internalType": "uint256",
-								"name": "moisture",
+								"name": "recordTimestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "farmerWallet",
+								"type": "address"
+							}
+						],
+						"internalType": "struct AgriSupplyChainPro.HarvestData",
+						"name": "harvest",
+						"type": "tuple"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "transporterName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "logisticCompanyName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "pickupLatitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "pickupLongitude",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "pickupTimestamp",
+								"type": "uint256"
+							},
+							{
+								"components": [
+									{
+										"internalType": "string",
+										"name": "ipfsHash",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "latitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "longitude",
+										"type": "string"
+									},
+									{
+										"internalType": "uint256",
+										"name": "timestamp",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct AgriSupplyChainPro.AuditPhoto[]",
+								"name": "transitPhotos",
+								"type": "tuple[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxGForce",
 								"type": "uint256"
 							},
 							{
 								"internalType": "uint256",
-								"name": "temperature",
+								"name": "averageGForce",
 								"type": "uint256"
 							},
 							{
 								"internalType": "uint256",
-								"name": "weight",
+								"name": "vibrationIndex",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "totalShockCount",
 								"type": "uint256"
 							},
 							{
 								"internalType": "string",
-								"name": "imageURL",
+								"name": "maxShockLatitude",
 								"type": "string"
 							},
 							{
-								"internalType": "address",
-								"name": "submittedBy",
-								"type": "address"
+								"internalType": "string",
+								"name": "maxShockLongitude",
+								"type": "string"
 							},
 							{
 								"internalType": "uint256",
-								"name": "timestamp",
+								"name": "maxShockTimestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "arrivalLatitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "arrivalLongitude",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "arrivalTimestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "minTemperature",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "averageTemperature",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxTemperature",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "averageHumidity",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "travelDurationSeconds",
 								"type": "uint256"
 							}
 						],
-						"internalType": "struct AgriQualityTracker.HarvestData",
+						"internalType": "struct AgriSupplyChainPro.TransportData",
+						"name": "transport",
+						"type": "tuple"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "shopName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "shopLocationAddress",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "handoverLatitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "handoverLongitude",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "receivedByName",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "handoverTimestamp",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct AgriSupplyChainPro.RetailerData",
+						"name": "retail",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_batchId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_shop",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_loc",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_lat",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_lng",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_person",
+						"type": "string"
+					}
+				],
+				"name": "confirmRetailHandover",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_loc",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_lat",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_lng",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_crop",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_variety",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_pDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_hDate",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_img",
+						"type": "string"
+					}
+				],
+				"name": "createHarvestBatch",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_batchId",
+						"type": "uint256"
+					}
+				],
+				"name": "getFullHistory",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "batchId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "enum AgriSupplyChainPro.BatchStatus",
+								"name": "status",
+								"type": "uint8"
+							},
+							{
+								"components": [
+									{
+										"internalType": "string",
+										"name": "farmerName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "farmLocationName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "harvestLatitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "harvestLongitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "cropName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "cropVariety",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "plantingDate",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "harvestDate",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "postHarvestImage",
+										"type": "string"
+									},
+									{
+										"internalType": "uint256",
+										"name": "recordTimestamp",
+										"type": "uint256"
+									},
+									{
+										"internalType": "address",
+										"name": "farmerWallet",
+										"type": "address"
+									}
+								],
+								"internalType": "struct AgriSupplyChainPro.HarvestData",
+								"name": "harvest",
+								"type": "tuple"
+							},
+							{
+								"components": [
+									{
+										"internalType": "string",
+										"name": "transporterName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "logisticCompanyName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "pickupLatitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "pickupLongitude",
+										"type": "string"
+									},
+									{
+										"internalType": "uint256",
+										"name": "pickupTimestamp",
+										"type": "uint256"
+									},
+									{
+										"components": [
+											{
+												"internalType": "string",
+												"name": "ipfsHash",
+												"type": "string"
+											},
+											{
+												"internalType": "string",
+												"name": "latitude",
+												"type": "string"
+											},
+											{
+												"internalType": "string",
+												"name": "longitude",
+												"type": "string"
+											},
+											{
+												"internalType": "uint256",
+												"name": "timestamp",
+												"type": "uint256"
+											}
+										],
+										"internalType": "struct AgriSupplyChainPro.AuditPhoto[]",
+										"name": "transitPhotos",
+										"type": "tuple[]"
+									},
+									{
+										"internalType": "uint256",
+										"name": "maxGForce",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "averageGForce",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "vibrationIndex",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "totalShockCount",
+										"type": "uint256"
+									},
+									{
+										"internalType": "string",
+										"name": "maxShockLatitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "maxShockLongitude",
+										"type": "string"
+									},
+									{
+										"internalType": "uint256",
+										"name": "maxShockTimestamp",
+										"type": "uint256"
+									},
+									{
+										"internalType": "string",
+										"name": "arrivalLatitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "arrivalLongitude",
+										"type": "string"
+									},
+									{
+										"internalType": "uint256",
+										"name": "arrivalTimestamp",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "minTemperature",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "averageTemperature",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "maxTemperature",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "averageHumidity",
+										"type": "uint256"
+									},
+									{
+										"internalType": "uint256",
+										"name": "travelDurationSeconds",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct AgriSupplyChainPro.TransportData",
+								"name": "transport",
+								"type": "tuple"
+							},
+							{
+								"components": [
+									{
+										"internalType": "string",
+										"name": "shopName",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "shopLocationAddress",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "handoverLatitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "handoverLongitude",
+										"type": "string"
+									},
+									{
+										"internalType": "string",
+										"name": "receivedByName",
+										"type": "string"
+									},
+									{
+										"internalType": "uint256",
+										"name": "handoverTimestamp",
+										"type": "uint256"
+									}
+								],
+								"internalType": "struct AgriSupplyChainPro.RetailerData",
+								"name": "retail",
+								"type": "tuple"
+							}
+						],
+						"internalType": "struct AgriSupplyChainPro.Batch",
 						"name": "",
 						"type": "tuple"
 					}
@@ -134,178 +719,24 @@
 						"internalType": "uint256",
 						"name": "_batchId",
 						"type": "uint256"
-					}
-				],
-				"name": "getSensorAnchors",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "string",
-								"name": "dataHash",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "periodEnd",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "timestamp",
-								"type": "uint256"
-							},
-							{
-								"internalType": "address",
-								"name": "anchoredBy",
-								"type": "address"
-							}
-						],
-						"internalType": "struct AgriQualityTracker.SensorAnchor[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "harvestRecords",
-				"outputs": [
+					},
 					{
 						"internalType": "string",
-						"name": "farmerName",
+						"name": "_ipfs",
 						"type": "string"
 					},
 					{
 						"internalType": "string",
-						"name": "location",
+						"name": "_lat",
 						"type": "string"
 					},
 					{
 						"internalType": "string",
-						"name": "harvestDate",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "moisture",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "temperature",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "weight",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "imageURL",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "submittedBy",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "sensorAnchors",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "dataHash",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "periodEnd",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "anchoredBy",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_farmerName",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_location",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_harvestDate",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_moisture",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_temperature",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_weight",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_imageURL",
+						"name": "_lng",
 						"type": "string"
 					}
 				],
-				"name": "storeHarvestData",
+				"name": "recordAuditPhoto",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -319,18 +750,27 @@
 					},
 					{
 						"internalType": "string",
-						"name": "_dataHash",
+						"name": "_name",
 						"type": "string"
 					},
 					{
-						"internalType": "uint256",
-						"name": "_periodEnd",
-						"type": "uint256"
+						"internalType": "string",
+						"name": "_company",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_lat",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_lng",
+						"type": "string"
 					}
 				],
-				"name": "storeSensorHash",
+				"name": "recordPickup",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			}
-		]
+			}]
