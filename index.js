@@ -84,22 +84,18 @@ app.post("/aggregateAndAnchor", async (req, res) => {
     try {
         const { batchId, vehicleId, arrivalLat, arrivalLng } = req.body;
 
-        // A. Fetch Batch from Blockchain to get Pickup Time for Duration
+        // 1. Fetch Batch from Blockchain (to calculate trip duration)
         const batchData = await contract.batches(batchId);
         const pickupTimestamp = Number(batchData.transport.pickupTimestamp);
         const currentTimestamp = Math.floor(Date.now() / 1000);
+        let duration = pickupTimestamp > 0 ? (currentTimestamp - pickupTimestamp) : 0;
 
-        let duration = 0;
-        if (pickupTimestamp > 0 && currentTimestamp > pickupTimestamp) {
-            duration = currentTimestamp - pickupTimestamp;
-        }
-
-        // B. Fetch Trip Data from Firebase
+        // 2. Fetch Sensor Data from Firebase
         const firebaseURL = `${FIREBASE_DB}/vehicle_data/${vehicleId}.json`;
         const fbRes = await axios.get(firebaseURL);
         const rawData = fbRes.data;
 
-        if (!rawData) return res.status(404).json({ error: "No sensor data found for this trip" });
+        if (!rawData) return res.status(404).json({ error: "No sensor data found" });
 
         const temps = [], hums = [];
         Object.values(rawData).forEach(r => {
@@ -107,8 +103,7 @@ app.post("/aggregateAndAnchor", async (req, res) => {
             if (r.humidity_pct !== undefined) hums.push(Number(r.humidity_pct));
         });
 
-        // C. Prepare the 'TransportSummary' Struct Object
-        // We round to integers because Solidity uint256 doesn't handle decimals
+        // 3. Prepare the Summary Struct (Matches Solidity Order)
         const summaryStruct = {
             minTemperature: temps.length ? Math.round(Math.min(...temps)) : 0,
             averageTemperature: temps.length ? Math.round(temps.reduce((a, b) => a + b, 0) / temps.length) : 0,
@@ -124,29 +119,34 @@ app.post("/aggregateAndAnchor", async (req, res) => {
             maxShockTimestamp: currentTimestamp
         };
 
-        // D. Send Transaction to Blockchain
-        // anchorTransportSummary(batchId, arrLat, arrLng, summaryStruct)
-        console.log(`⚓ Anchoring Analytics for Batch ${batchId}...`);
-        
+        // 4. TRIGGER BLOCKCHAIN TRANSACTION (ASYNCHRONOUS)
+        console.log(`⚓ Anchoring Batch ${batchId}...`);
         const tx = await contract.anchorTransportSummary(
             batchId,
             arrivalLat.toString(),
             arrivalLng.toString(),
             summaryStruct
         );
-        
-        const receipt = await tx.wait();
-        console.log("✅ Verified on Chain. Hash:", receipt.hash);
 
+        // 5. SEND RESPONSE IMMEDIATELY (Avoids Render Timeout)
+        const finalHash = tx.hash || tx.transactionHash || "Pending";
         res.json({ 
-            status: "ARRIVED", 
-            tx: receipt.hash, 
-            durationSeconds: duration,
+            status: "PROCESSING", 
+            tx: finalHash, 
             summary: summaryStruct 
         });
 
+        // 6. BACKGROUND TASKS: Wait for Blockchain & Clear Firebase
+        tx.wait().then(async (receipt) => {
+            console.log("✅ Block Mined:", receipt.transactionHash || receipt.hash);
+            
+            // Clean up Firebase so the truck is ready for the next batch
+            await axios.delete(firebaseURL);
+            console.log(`🧹 Firebase cleared for ${vehicleId}`);
+        }).catch(err => console.error("Background Error:", err));
+
     } catch (err) {
-        console.error("Anchoring Error:", err.message);
+        console.error("Backend Error:", err.message);
         res.status(500).json({ error: err.message });
     }
 });
