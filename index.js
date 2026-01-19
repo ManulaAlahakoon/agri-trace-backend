@@ -32,6 +32,38 @@ app.post('/start-transport', async (req, res) => {
     }
 });
 
+app.post("/update-location", async (req, res) => {
+    try {
+        const { batchId, lat, lng } = req.body;
+        
+        if (!batchId || !lat || !lng) {
+            return res.status(400).json({ error: "Missing GPS data" });
+        }
+
+        const gpsData = {
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+            timestamp: Date.now()
+        };
+
+        // 1. Append to the HISTORY (The Breadcrumb Trail)
+        // This is for drawing the line on the map later
+        const historyUrl = `${FIREBASE_DB}/batches/BATCH_${batchId}/route.json`;
+        await axios.post(historyUrl, gpsData);
+
+        // 2. Overwrite the LATEST (The Real-time Pin)
+        // This is so the consumer portal can show a "Live" moving icon 
+        // without downloading the whole route every 5 seconds.
+        const latestUrl = `${FIREBASE_DB}/batches/BATCH_${batchId}/lastLocation.json`;
+        await axios.put(latestUrl, gpsData);
+
+        res.sendStatus(200);
+    } catch (err) {
+        console.error("GPS Logging Error:", err.message);
+        res.status(500).json({ error: "Failed to log location" });
+    }
+});
+
 /* ---------------- 2. PROXY GEOCAL (GPS to Name) ---------------- */
 app.get("/get-placename", async (req, res) => {
     const { lat, lng } = req.query;
